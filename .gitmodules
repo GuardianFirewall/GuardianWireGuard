@@ -1,0 +1,3 @@
+[submodule "wireguard"]
+	path = wireguard
+	url = git@git.guardianapp.com:mobile-software-apple/grd-wireguard-apple.git
