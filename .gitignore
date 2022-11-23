@@ -1,3 +1,5 @@
 .DS_Store
 /GRDWireGuardKit.xcodeproj/xcuserdata/cj.xcuserdatad/xcschemes/xcschememanagement.plist
 /build
+*.xcframework
+xcuserdata
