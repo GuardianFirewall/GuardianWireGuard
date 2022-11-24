@@ -14,8 +14,8 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "231A2086292D2A3500D8E9C2"
-               BuildableName = "GRDWireGuardKitiOS.framework"
+               BlueprintIdentifier = "23187D92292E661E00ED302A"
+               BuildableName = "GRDWireGuardKit.framework"
                BlueprintName = "GRDWireGuardKitiOS"
                ReferencedContainer = "container:GRDWireGuardKit.xcodeproj">
             </BuildableReference>
@@ -50,8 +50,8 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "231A2086292D2A3500D8E9C2"
-            BuildableName = "GRDWireGuardKitiOS.framework"
+            BlueprintIdentifier = "23187D92292E661E00ED302A"
+            BuildableName = "GRDWireGuardKit.framework"
             BlueprintName = "GRDWireGuardKitiOS"
             ReferencedContainer = "container:GRDWireGuardKit.xcodeproj">
          </BuildableReference>
