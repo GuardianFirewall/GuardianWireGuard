@@ -7,8 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		23187D96292E661E00ED302A /* GRDWireGuardKitiOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 23187D95292E661E00ED302A /* GRDWireGuardKitiOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		23187D9C292E668500ED302A /* libwg-go.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 231A20A8292D2BB200D8E9C2 /* libwg-go.a */; };
+		23187D96292E661E00ED302A /* GRDWireGuardKitiOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 23187D95292E661E00ED302A /* GRDWireGuardKitiOS.h */; };
 		23187D9D292E669400ED302A /* wireguard.h in Headers */ = {isa = PBXBuildFile; fileRef = 231A2111292E55E000D8E9C2 /* wireguard.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		23187D9E292E669F00ED302A /* WireGuardKitC.h in Headers */ = {isa = PBXBuildFile; fileRef = 231A2106292E55D100D8E9C2 /* WireGuardKitC.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		23187D9F292E66A200ED302A /* key.h in Headers */ = {isa = PBXBuildFile; fileRef = 231A2107292E55D100D8E9C2 /* key.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -38,7 +37,7 @@
 		23187DB7292E66CF00ED302A /* ringlogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 231A20E1292E558300D8E9C2 /* ringlogger.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		23187DB8292E66DF00ED302A /* GRDKeychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239AD33727E1F3570076055C /* GRDKeychain.swift */; };
 		23187DB9292E66DF00ED302A /* PacketTunnelProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2302A82327C6B7E8009F8664 /* PacketTunnelProvider.swift */; };
-		23187DC2292E6A0100ED302A /* GRDWireGuardKitmacOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 23187DC1292E6A0100ED302A /* GRDWireGuardKitmacOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		23187DC2292E6A0100ED302A /* GRDWireGuardKitmacOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 23187DC1292E6A0100ED302A /* GRDWireGuardKitmacOS.h */; };
 		23187DC8292E6A4400ED302A /* libwg-go.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 23187D8B292E5ACD00ED302A /* libwg-go.a */; };
 		23187DC9292E6A6800ED302A /* wireguard.h in Headers */ = {isa = PBXBuildFile; fileRef = 231A2111292E55E000D8E9C2 /* wireguard.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		23187DCA292E6A6D00ED302A /* WireGuardKitC.h in Headers */ = {isa = PBXBuildFile; fileRef = 231A2106292E55D100D8E9C2 /* WireGuardKitC.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -71,6 +70,7 @@
 		23187DE5292E6A8F00ED302A /* PacketTunnelProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2302A82327C6B7E8009F8664 /* PacketTunnelProvider.swift */; };
 		23187DEB292E8DFE00ED302A /* GRDWireGuardKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 23187DEA292E8DFE00ED302A /* GRDWireGuardKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		23187DEC292E8DFE00ED302A /* GRDWireGuardKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 23187DEA292E8DFE00ED302A /* GRDWireGuardKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		23187DF7292F60C300ED302A /* libwg-go.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 23187DF6292F60C300ED302A /* libwg-go.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -100,6 +100,7 @@
 		23187DC1292E6A0100ED302A /* GRDWireGuardKitmacOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GRDWireGuardKitmacOS.h; sourceTree = "<group>"; };
 		23187DEA292E8DFE00ED302A /* GRDWireGuardKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GRDWireGuardKit.h; sourceTree = "<group>"; };
 		23187DED292E8F7A00ED302A /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
+		23187DF6292F60C300ED302A /* libwg-go.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libwg-go.a"; path = "../../../../../Library/Developer/Xcode/DerivedData/GRDWireGuardKit-crrjejcmjrnwdjfxccgbersxwnsx/Build/Products/Debug-iphoneos/libwg-go.a"; sourceTree = "<group>"; };
 		231A20A8292D2BB200D8E9C2 /* libwg-go.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libwg-go.a"; path = "../../../../../Library/Developer/Xcode/DerivedData/GRDWireGuardKit-crrjejcmjrnwdjfxccgbersxwnsx/Build/Products/Debug-iphonesimulator/libwg-go.a"; sourceTree = "<group>"; };
 		231A20D6292E558300D8E9C2 /* FileManager+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FileManager+Extension.swift"; sourceTree = "<group>"; };
 		231A20D7292E558300D8E9C2 /* Keychain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
@@ -139,7 +140,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				23187D9C292E668500ED302A /* libwg-go.a in Frameworks */,
+				23187DF7292F60C300ED302A /* libwg-go.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -273,6 +274,7 @@
 		23C354D327DF55490063D69B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				23187DF6292F60C300ED302A /* libwg-go.a */,
 				23187D8B292E5ACD00ED302A /* libwg-go.a */,
 				231A20A8292D2BB200D8E9C2 /* libwg-go.a */,
 				23136B73281697150064EA5C /* libwg-go.a */,
