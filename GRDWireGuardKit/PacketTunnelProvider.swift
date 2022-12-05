@@ -147,6 +147,7 @@ import NetworkExtension
             }
             
 			completionHandler(nil)
+			return
 		}
 		
 		if messageData.count == 1 && messageData[0] == 0 {
@@ -157,6 +158,7 @@ import NetworkExtension
 				}
 				completionHandler(data)
 			}
+			
 		} else {
 			completionHandler(nil)
 		}
