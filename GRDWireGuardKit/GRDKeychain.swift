@@ -38,21 +38,7 @@ class GRDKeychain {
 		}
 	}
 		
-	static func saveWGQuickConfig(bundleId: String, wgQuickConfig: String) -> Bool {
-		if let oldWGQuickConfig = Self.loadWGQuickConfig(bundleId: bundleId) {
-			if oldWGQuickConfig == wgQuickConfig {
-				NSLog("[INFO] New wg-quick config is the same as the old wg-quick config. Skipping keychain write.")
-				return true
-				
-			} else {
-				NSLog("[WARNING] wg-quick config to delete found in the keychain.")
-				Self.deleteWGQuickConfig(bundleId: bundleId)
-			}
-			
-		} else {
-			NSLog("[INFO] No wg-quick config in the keychain. Writing new keychain item")
-		}
-			
+	static func saveWGQuickConfig(bundleId: String, wgQuickConfig: String) -> Bool {			
 		var query = Self.keychainBaseQuery(bundleIdentifier: bundleId)
 		query[kSecClass] = kSecClassGenericPassword
 		query[kSecAttrAccessible] = kSecAttrAccessibleAfterFirstUnlock
@@ -60,10 +46,17 @@ class GRDKeychain {
 		query[kSecAttrLabel] = bundleId
 
 		let status = SecItemAdd(query as CFDictionary, nil)
-		if status != errSecSuccess {
+		if status == errSecDuplicateItem {
+			NSLog("[WARNING] Duplicate keychain item detected. Removing and replacing it")
+			Self.deleteWGQuickConfig(bundleId: bundleId)
+			return Self.saveWGQuickConfig(bundleId: bundleId, wgQuickConfig: wgQuickConfig)
+			
+		} else if status != errSecSuccess {
 			NSLog("[ERROR] Failed to write wg-quick to keychain: \(status).")
 			return false
 		}
+		
+		NSLog("[INFO] Sucessfully stored WireGuard credential!")
 		return true
 	}
 		
