@@ -9,7 +9,18 @@ import os
 import Foundation
 import NetworkExtension
 
+// Note from CJ 2023-01-12
+// Added our own error type here to properly
+// reflect the keychain being blocked by the XPC
+// connection on macOS and never recovering
+enum GRDWireGuardKitError: String, Error {
+	case internalError
+	case xpcKeychainAccessBlocked
+}
+
 @objc open class GRDPacketTunnelProvider : NEPacketTunnelProvider {
+	var keychainAccessPending: Bool = false
+	
 	private lazy var adapter: WireGuardAdapter = {
 		return WireGuardAdapter(with: self) { logLevel, message in
 			wg_log(logLevel.osLogLevel, message: message)
@@ -17,6 +28,25 @@ import NetworkExtension
 	}()
 	
 	public override func startTunnel(options: [String: NSObject]?, completionHandler: @escaping (Error?) -> Void) {
+// Note from CJ 2023-01-12
+// This little hack below appears to be required on macOS 
+// to allow all actions to complete properly before attempting 
+// to start the tunnel and establish a connection		
+#if os(macOS)
+		var count: Int = 0
+		while keychainAccessPending == true {
+			if count > 25 {
+				completionHandler(GRDWireGuardKitError.xpcKeychainAccessBlocked)
+				return
+			}
+			
+			NSLog("[WARNING] XPC keychain access still pending, count: \(count)! Sleeping for 0.1s")
+			Thread.sleep(forTimeInterval: 0.1)
+			count += 1
+		}
+		NSLog("[WARNING] XPC keychain access no longer pending. Attempting to starting the tunnel")
+#endif
+		
 		let dictionary  = Bundle.main.infoDictionary!
         let bundleId    = Bundle.main.bundleIdentifier!
 		let version     = dictionary["CFBundleShortVersionString"] as! String
@@ -126,6 +156,9 @@ import NetworkExtension
 	public override func handleAppMessage(_ messageData: Data, completionHandler: ((Data?) -> Void)? = nil) {
 		guard let completionHandler = completionHandler else { return }
 
+		NSLog("[WARNING] Setting XPC keychain access pending to true")
+		keychainAccessPending = true
+		
 		// Note from CJ 2022-03-16:
 		// Due to limitations on macOS System Extension Network Extensions
 		// can't access keychain items created by the host app.
@@ -141,11 +174,8 @@ import NetworkExtension
 				NSLog("[ERROR] Failed to save WireGuard config")
 			}
             
-            let loadConfig = GRDKeychain.loadWGQuickConfig(bundleId: Bundle.main.bundleIdentifier!)
-            if loadConfig == nil {
-                NSLog("[ERROR] Failed to load WireGuard config again that we just saved!")
-            }
-            
+			NSLog("[WARNING] Setting XPC keychain access pending to false")
+			keychainAccessPending = false
 			completionHandler(nil)
 			return
 		}
