@@ -166,19 +166,29 @@ enum GRDWireGuardKitError: String, Error {
 		// startTunnel() but those are sometimes ommitted for some strange reason.
 		// The WireGuard config is therefore passed through the IPC handlers here
 		// which appear to work very reliably
-		let message: PTPMessage = try! JSONDecoder().decode(PTPMessage.self, from:messageData)
-		if message.wireGuardConfig != nil {
-            NSLog("[INFO] Saving WireGuard config received via IPC message")
-			let success = GRDKeychain.saveWGQuickConfig(bundleId: Bundle.main.bundleIdentifier!, wgQuickConfig: message.wireGuardConfig!)
-			if success == false {
-				NSLog("[ERROR] Failed to save WireGuard config")
+		do {
+			let message: PTPMessage = try JSONDecoder().decode(PTPMessage.self, from:messageData)
+			if message.wireGuardConfig != nil {
+				NSLog("[INFO] Saving WireGuard config received via IPC message")
+				let success = GRDKeychain.saveWGQuickConfig(bundleId: Bundle.main.bundleIdentifier!, wgQuickConfig: message.wireGuardConfig!)
+				if success == false {
+					NSLog("[ERROR] Failed to save WireGuard config")
+				}
+				
+				NSLog("[WARNING] Setting XPC keychain access pending to false")
+				keychainAccessPending = false
+				completionHandler(nil)
+				return
+				
 			}
-            
-			NSLog("[WARNING] Setting XPC keychain access pending to false")
-			keychainAccessPending = false
-			completionHandler(nil)
+			
+		} catch {
+			NSLog("[ERROR] Failed to decode JSON: \(error)")
+			let errMessage = "Failed to decode JSON: \(error)"
+			completionHandler((errMessage as NSString).data(using: NSUTF8StringEncoding))
 			return
 		}
+		
 		
 		if messageData.count == 1 && messageData[0] == 0 {
 			adapter.getRuntimeConfiguration { settings in
