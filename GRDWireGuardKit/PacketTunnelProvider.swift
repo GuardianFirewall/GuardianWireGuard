@@ -31,7 +31,7 @@ enum GRDWireGuardKitError: String, Error {
 // Note from CJ 2023-01-12
 // This little hack below appears to be required on macOS 
 // to allow all actions to complete properly before attempting 
-// to start the tunnel and establish a connection		
+// to start the tunnel and establish a connection
 #if os(macOS)
 		var count: Int = 0
 		while keychainAccessPending == true {
@@ -55,6 +55,12 @@ enum GRDWireGuardKitError: String, Error {
 		
         let activationAttemptId = options?["activationAttemptId"] as? String
 		NSLog("[WARNING] Attempting to start the VPN with activation attempt id: " + (activationAttemptId == nil ? "no id present. Starting via the OS": "app"))
+		
+		//
+		// Note from CJ 2026-09-30
+		// This logger isn't actually actively used but presumed to be required in order
+		// to have the PTP not randomly crash
+		Logger.configureGlobal(tagged: "GRD-NET", withFilePath: FileManager.logFileURL?.path)
 		
 		NSLog("[WARNING] Trying to setup protocol configuration")
         
@@ -119,6 +125,7 @@ enum GRDWireGuardKitError: String, Error {
 
 			case .invalidState:
 				// Must never happen
+				NSLog("[ERROR] Failed to start VPN tunnel due to invalid state. Must never happen!")
 				fatalError()
 			}
 		}
@@ -129,8 +136,7 @@ enum GRDWireGuardKitError: String, Error {
 	}
 	
 	public override func stopTunnel(with reason: NEProviderStopReason, completionHandler: @escaping () -> Void) {
-		NSLog("[WARNING] Stopping tunnel");
-
+		NSLog("[WARNING] Stopping tunnel")
 		adapter.stop { error in
 			if let error = error {
 				NSLog("[ERROR] Failed to stop WireGuard adapter: \(error.localizedDescription)")
@@ -166,19 +172,31 @@ enum GRDWireGuardKitError: String, Error {
 		// startTunnel() but those are sometimes ommitted for some strange reason.
 		// The WireGuard config is therefore passed through the IPC handlers here
 		// which appear to work very reliably
-		let message: PTPMessage = try! JSONDecoder().decode(PTPMessage.self, from:messageData)
-		if message.wireGuardConfig != nil {
-            NSLog("[INFO] Saving WireGuard config received via IPC message")
-			let success = GRDKeychain.saveWGQuickConfig(bundleId: Bundle.main.bundleIdentifier!, wgQuickConfig: message.wireGuardConfig!)
-			if success == false {
-				NSLog("[ERROR] Failed to save WireGuard config")
+		do {
+			let message: PTPMessage = try JSONDecoder().decode(PTPMessage.self, from:messageData)
+			if message.wireGuardConfig != nil {
+				NSLog("[INFO] Saving WireGuard config received via IPC message")
+				let success = GRDKeychain.saveWGQuickConfig(bundleId: Bundle.main.bundleIdentifier!, wgQuickConfig: message.wireGuardConfig!)
+				if success == false {
+					NSLog("[ERROR] Failed to save WireGuard config")
+				}
+				
+				NSLog("[WARNING] Setting XPC keychain access pending to false")
+				keychainAccessPending = false
+				completionHandler(nil)
+				return
 			}
-            
+			
+		} catch {
+			NSLog("[ERROR] Failed to decode JSON: \(error)")
 			NSLog("[WARNING] Setting XPC keychain access pending to false")
 			keychainAccessPending = false
-			completionHandler(nil)
+			
+			let errMessage = "Failed to decode JSON: \(error)"
+			completionHandler((errMessage as NSString).data(using: NSUTF8StringEncoding))
 			return
 		}
+		
 		
 		if messageData.count == 1 && messageData[0] == 0 {
 			adapter.getRuntimeConfiguration { settings in
