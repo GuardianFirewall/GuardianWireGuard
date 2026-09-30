@@ -31,7 +31,7 @@ enum GRDWireGuardKitError: String, Error {
 // Note from CJ 2023-01-12
 // This little hack below appears to be required on macOS 
 // to allow all actions to complete properly before attempting 
-// to start the tunnel and establish a connection		
+// to start the tunnel and establish a connection
 #if os(macOS)
 		var count: Int = 0
 		while keychainAccessPending == true {
@@ -119,6 +119,7 @@ enum GRDWireGuardKitError: String, Error {
 
 			case .invalidState:
 				// Must never happen
+				NSLog("[ERROR] Failed to start VPN tunnel due to invalid state. Must never happen!")
 				fatalError()
 			}
 		}
@@ -129,8 +130,7 @@ enum GRDWireGuardKitError: String, Error {
 	}
 	
 	public override func stopTunnel(with reason: NEProviderStopReason, completionHandler: @escaping () -> Void) {
-		NSLog("[WARNING] Stopping tunnel");
-
+		NSLog("[WARNING] Stopping tunnel")
 		adapter.stop { error in
 			if let error = error {
 				NSLog("[ERROR] Failed to stop WireGuard adapter: \(error.localizedDescription)")
@@ -179,11 +179,13 @@ enum GRDWireGuardKitError: String, Error {
 				keychainAccessPending = false
 				completionHandler(nil)
 				return
-				
 			}
 			
 		} catch {
 			NSLog("[ERROR] Failed to decode JSON: \(error)")
+			NSLog("[WARNING] Setting XPC keychain access pending to false")
+			keychainAccessPending = false
+			
 			let errMessage = "Failed to decode JSON: \(error)"
 			completionHandler((errMessage as NSString).data(using: NSUTF8StringEncoding))
 			return
