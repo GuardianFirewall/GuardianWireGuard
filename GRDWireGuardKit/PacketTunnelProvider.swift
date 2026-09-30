@@ -56,6 +56,12 @@ enum GRDWireGuardKitError: String, Error {
         let activationAttemptId = options?["activationAttemptId"] as? String
 		NSLog("[WARNING] Attempting to start the VPN with activation attempt id: " + (activationAttemptId == nil ? "no id present. Starting via the OS": "app"))
 		
+		//
+		// Note from CJ 2026-09-30
+		// This logger isn't actually actively used but presumed to be required in order
+		// to have the PTP not randomly crash
+		Logger.configureGlobal(tagged: "GRD-NET", withFilePath: FileManager.logFileURL?.path)
+		
 		NSLog("[WARNING] Trying to setup protocol configuration")
         
 		#if os(macOS)
