@@ -4,3 +4,5 @@
 *.xcframework
 xcuserdata
 GRDWireGuardKit.xcframework.zip
+/27.2-27B52/Xcode/CachedSpecifications-xcodebuild
+/27.2-27B52/Xcode/PlugInCache-xcodebuild.xcplugincache
